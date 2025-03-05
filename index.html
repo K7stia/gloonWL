@@ -148,7 +148,15 @@
             appearance: none;
         }
 
-        button:hover {
+        button:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1),
+                0px 1px 4px 0px #cccccc;
+        }
+
+        button:hover:not(:disabled) {
             background-color: #6c2ea2;
             box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.3),
                 0px 1px 4px 0px #6c2ea2;
@@ -184,7 +192,7 @@
                 width: 80%;
             }
 
-            .traffi {
+            .mainimg {
                 width: 80%;
             }
 
@@ -193,18 +201,18 @@
             }
 
             button {
-                font-size: 16px;
+                font-size: 25px;
             }
 
             label {
-                font-size: 12px;
+                font-size: 18px;
             }
         }
 
         @media (max-width: 480px) {
 
             .checker,
-            .traffi {
+            .mainimg {
                 width: 90%;
             }
 
@@ -231,7 +239,7 @@
     <div class="block">
         <label for="walletAddress">Input Wallet Address</label>
         <input type="text" id="walletAddress" placeholder="0x...">
-        <button onclick="checkAddress()">Check Now</button>
+        <button id="checkButton" onclick="checkAddress()" disabled>Check Now</button>
         <p id="result"></p>
     </div>
 
@@ -257,7 +265,7 @@
             img.src = `img/item${itemNum}.png`;
             img.className = 'floating-item';
 
-            const size = Math.random() * 150 + 50;
+            const size = Math.random() * 100 + 50;
             img.style.height = `${size}px`;
             img.style.width = 'auto';
 
@@ -322,10 +330,26 @@
         }
 
         window.onload = function () {
-            const initialCount = Math.floor(Math.random() * 9) + 7;
+            const isMobile = window.innerWidth <= 768;
+            let initialCount;
+
+            if (isMobile) {
+                initialCount = Math.floor(Math.random() * 4) + 3;
+            } else {
+                initialCount = Math.floor(Math.random() * 9) + 7;
+            }
+
             for (let i = 0; i < initialCount; i++) {
                 setTimeout(createFloatingItem, i * 500);
             }
+
+            // Контроль стану кнопки
+            const input = document.getElementById('walletAddress');
+            const button = document.getElementById('checkButton');
+
+            input.addEventListener('input', function () {
+                button.disabled = input.value.trim() === '';
+            });
         };
     </script>
 </body>
