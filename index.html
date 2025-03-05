@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karantina&display=swap" rel="stylesheet">
+    <link href="https://framerusercontent.com/images/O1sxGSiuUGHzDhopBkhLrVGZm8.png" rel="icon"
+        media="(prefers-color-scheme: light)">
+    <link href="https://framerusercontent.com/images/0TTtb0zNCE03XIcPdAIadZ9mh8.png" rel="icon"
+        media="(prefers-color-scheme: dark)">
+    <title>WL Checker for Gloon Invasion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            background-color: #943fde;
+            margin: 0;
+            background-image: url('back.png');
+            background-size: auto 100vh;
+            background-repeat: repeat-x;
+            background-position: bottom;
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .floating-items {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-item {
+            position: absolute;
+            opacity: 0.7;
+            animation: moveAndFade linear;
+            animation-duration: var(--duration);
+        }
+
+        @keyframes moveAndFade {
+            0% {
+                transform: translate(var(--start-x), var(--start-y)) scale(1) rotate(-10deg);
+                opacity: 0.7;
+            }
+
+            25% {
+                transform: translate(calc(var(--start-x) + (var(--end-x) - var(--start-x)) * 0.25), calc(var(--start-y) + (var(--end-y) - var(--start-y)) * 0.25)) scale(1) rotate(10deg);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: translate(calc(var(--start-x) + (var(--end-x) - var(--start-x)) * 0.5), calc(var(--start-y) + (var(--end-y) - var(--start-y)) * 0.5)) scale(1) rotate(-10deg);
+                opacity: 0.7;
+            }
+
+            75% {
+                transform: translate(calc(var(--start-x) + (var(--end-x) - var(--start-x)) * 0.75), calc(var(--start-y) + (var(--end-y) - var(--start-y)) * 0.75)) scale(1) rotate(10deg);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) scale(0) rotate(-10deg);
+                opacity: 0;
+            }
+        }
+
+        .checker {
+            margin-top: 10px;
+            width: 520px;
+            height: auto;
+            position: relative;
+            z-index: 3;
+        }
+
+        .mainimg {
+            width: 488px;
+            margin-bottom: -8px;
+            margin-top: 10px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .block {
+            background-color: #f1dbfa;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            margin: 0px auto 20px auto;
+            position: relative;
+            z-index: 3;
+        }
+
+        input,
+        button {
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        input {
+            color: #000000;
+            font-size: 16px;
+            border: 1px #943fde solid;
+            width: 95%;
+            height: 33px;
+            background-color: #ffffff;
+            box-shadow: 0px 1px 4px 0px #943fde;
+        }
+
+        button {
+            width: 70%;
+            height: 55px;
+            margin-top: 19px;
+            margin-bottom: 19px;
+            background-color: #943fde;
+            color: #ffffff;
+            font-size: 33px;
+            font-family: "Karantina", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: background-color 0.3s;
+            box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.3),
+                0px 1px 4px 0px #943fde;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        button:hover {
+            background-color: #6c2ea2;
+            box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.3),
+                0px 1px 4px 0px #6c2ea2;
+        }
+
+        #result {
+            margin-top: 1px;
+            font-size: 25px;
+            color: #943fde;
+            text-align: center;
+            font-family: "Karantina", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        label {
+            font-family: "Karantina", system-ui;
+            margin-left: 9px;
+            font-size: 22px;
+            letter-spacing: 0.5px;
+            color: #943fde;
+            align-self: flex-start;
+        }
+
+        @media (max-width: 768px) {
+            .checker {
+                width: 80%;
+            }
+
+            .traffi {
+                width: 80%;
+            }
+
+            input {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 16px;
+            }
+
+            label {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .checker,
+            .traffi {
+                width: 90%;
+            }
+
+            .block {
+                padding: 15px;
+            }
+
+            button {
+                height: 50px;
+            }
+
+            input {
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-items" id="floatingContainer"></div>
+
+    <img src="checker.png" alt="WL Checker" class="checker">
+    <img src="main.png" alt="Logo" class="mainimg">
+    <div class="block">
+        <label for="walletAddress">Input Wallet Address</label>
+        <input type="text" id="walletAddress" placeholder="0x...">
+        <button onclick="checkAddress()">Check Now</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        async function checkAddress() {
+            const address = document.getElementById('walletAddress').value.trim().toLowerCase();
+            const response = await fetch('wallets.csv');
+            const csvData = await response.text();
+            const lines = csvData.split('\n');
+            const whiteList = lines.map(line => line.trim().toLowerCase());
+
+            if (whiteList.includes(address)) {
+                document.getElementById('result').textContent = 'Congratulations, you are on the Whitelist';
+            } else {
+                document.getElementById('result').textContent = 'Sorry, you are not on the Whitelist';
+            }
+        }
+
+        function createFloatingItem() {
+            const container = document.getElementById('floatingContainer');
+            const img = document.createElement('img');
+            const itemNum = Math.floor(Math.random() * 5) + 1;
+            img.src = `img/item${itemNum}.png`;
+            img.className = 'floating-item';
+
+            const size = Math.random() * 150 + 50;
+            img.style.height = `${size}px`;
+            img.style.width = 'auto';
+
+            const duration = Math.random() * 13 + 7;
+            img.style.setProperty('--duration', `${duration}s`);
+
+            const edges = ['top', 'right', 'bottom', 'left'];
+            const startEdge = edges[Math.floor(Math.random() * 4)];
+            const endEdge = edges[Math.floor(Math.random() * 4)];
+
+            let startX, startY, endX, endY;
+
+            switch (startEdge) {
+                case 'top':
+                    startX = Math.random() * 100 - 20;
+                    startY = -20;
+                    break;
+                case 'right':
+                    startX = 100;
+                    startY = Math.random() * 100 - 20;
+                    break;
+                case 'bottom':
+                    startX = Math.random() * 100 - 20;
+                    startY = 100;
+                    break;
+                case 'left':
+                    startX = -20;
+                    startY = Math.random() * 100 - 20;
+                    break;
+            }
+
+            switch (endEdge) {
+                case 'top':
+                    endX = Math.random() * 100 - 20;
+                    endY = -20;
+                    break;
+                case 'right':
+                    endX = 100;
+                    endY = Math.random() * 100 - 20;
+                    break;
+                case 'bottom':
+                    endX = Math.random() * 100 - 20;
+                    endY = 100;
+                    break;
+                case 'left':
+                    endX = -20;
+                    endY = Math.random() * 100 - 20;
+                    break;
+            }
+
+            img.style.setProperty('--start-x', `${startX}vw`);
+            img.style.setProperty('--start-y', `${startY}vh`);
+            img.style.setProperty('--end-x', `${endX}vw`);
+            img.style.setProperty('--end-y', `${endY}vh`);
+
+            container.appendChild(img);
+
+            setTimeout(() => {
+                img.remove();
+                createFloatingItem();
+            }, duration * 1000);
+        }
+
+        window.onload = function () {
+            const initialCount = Math.floor(Math.random() * 9) + 7;
+            for (let i = 0; i < initialCount; i++) {
+                setTimeout(createFloatingItem, i * 500);
+            }
+        };
+    </script>
+</body>
+
+</html>
